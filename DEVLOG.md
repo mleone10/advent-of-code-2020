@@ -16,3 +16,6 @@ I also learned about the `-e` and `-u` Bash flags.  There's a brief writeup abou
 * `-u` sets the **nounset** flag.  If an uninitialized variable is encountered, the script exists.
     
 Together, they ensure that a) a suffix-less directory is never created, and b) that days are never overwritten, since `mkdir` fails if invoked for a directory that already exists.
+
+## 12/3
+Nothing really new today!  A fun modulo operator to progressively loop through the static grid, an in-line boolean expression in an `append` statement, and a rarely-encountered `*=` operator were about all it took.  This is the first grid of the year though, so I'll probably go back and start extracting a Grid type into the library.
