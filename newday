@@ -1,0 +1,21 @@
+#!/bin/bash -eu
+
+mkdir cmd/day$1
+touch cmd/day$1/input.txt
+cat <<EOF >cmd/day$1/main.go
+package main
+
+import (
+	"bufio"
+	"log"
+	"os"
+)
+
+func main() {
+	scanner := bufio.NewScanner(os.Stdin)
+
+	for scanner.Scan() {
+		log.Println(scanner.Text())
+	}
+}
+EOF
