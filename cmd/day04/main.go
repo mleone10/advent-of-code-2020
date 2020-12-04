@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-var hcls = map[string]bool{
+var ecls = map[string]bool{
 	"amb": true,
 	"blu": true,
 	"brn": true,
@@ -78,7 +78,7 @@ func countValidPassports(ps []passport, isValid func(p passport) bool) int {
 }
 
 func validateFields(p passport) bool {
-	return p.numFs == 8 || p.numFs == 7 && p.cid == ""
+	return p.numFs == 8 || p.numFs == 7 && isEmpty(p.cid)
 }
 
 func validateData(p passport) bool {
@@ -107,7 +107,7 @@ func (p passport) eyrIsValid() bool {
 }
 
 func (p passport) hgtIsValid() bool {
-	if p.hgt == "" {
+	if isEmpty(p.hgt) {
 		return false
 	}
 
@@ -128,7 +128,7 @@ func (p passport) hgtIsValid() bool {
 }
 
 func (p passport) hclIsValid() bool {
-	if p.hcl == "" {
+	if isEmpty(p.hcl) {
 		return false
 	}
 
@@ -144,7 +144,7 @@ func (p passport) hclIsValid() bool {
 }
 
 func (p passport) eclIsValid() bool {
-	return hcls[p.ecl]
+	return ecls[p.ecl]
 }
 
 func (p passport) pidIsValid() bool {
@@ -156,4 +156,8 @@ func (p passport) pidIsValid() bool {
 	}
 
 	return true
+}
+
+func isEmpty(f string) bool {
+	return f == ""
 }
