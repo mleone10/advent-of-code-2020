@@ -10,10 +10,7 @@ import (
 const tree = "#"
 
 type loc bool
-
-type grid struct {
-	locs [][]loc
-}
+type grid [][]loc
 
 type slope struct {
 	x, y int
@@ -28,7 +25,7 @@ var slopes = [5]slope{
 }
 
 func main() {
-	g := grid{}
+	var g grid
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
@@ -36,7 +33,7 @@ func main() {
 		for _, l := range strings.Split(scanner.Text(), "") {
 			r = append(r, (l == tree))
 		}
-		g.locs = append(g.locs, r)
+		g = append(g, r)
 	}
 
 	log.Printf("Trees encountered with slope 3, 1: %d", numTreesOnSlope(g, slopes[1]))
@@ -46,8 +43,8 @@ func main() {
 func numTreesOnSlope(g grid, s slope) int {
 	var x, y, sum int
 
-	for y < len(g.locs) {
-		if g.locs[y][x%len(g.locs[y])] {
+	for y < len(g) {
+		if g[y][x%len(g[y])] {
 			sum++
 		}
 		x += s.x
