@@ -53,9 +53,7 @@ func Ceil(x float64) int {
 func IntSliceMax(ints []int) int {
 	var max int
 	for _, i := range ints {
-		if i > max {
-			max = i
-		}
+		max = Max(i, max)
 	}
 	return max
 }
@@ -64,9 +62,7 @@ func IntSliceMax(ints []int) int {
 func IntSliceMin(ints []int) int {
 	min := math.MaxInt64
 	for _, i := range ints {
-		if i < min {
-			min = i
-		}
+		min = Min(i, min)
 	}
 	return min
 }
