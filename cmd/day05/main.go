@@ -6,6 +6,8 @@ import (
 	"os"
 	"sort"
 	"strings"
+
+	aoc "github.com/mleone10/advent-of-code-2020"
 )
 
 func main() {
@@ -21,15 +23,7 @@ func main() {
 }
 
 func calcMaxSeatID(ps []string) int {
-	var max int
-
-	for _, id := range calcSeatIDs(ps) {
-		if id > max {
-			max = id
-		}
-	}
-
-	return max
+	return aoc.IntSliceMax(calcSeatIDs(ps))
 }
 
 func calcMySeatID(ps []string) int {
@@ -66,7 +60,7 @@ func calcSeatID(p string) int {
 }
 
 func calcRow(p string) int {
-	rs := buildIntSlice(0, 127)
+	rs := aoc.InitIntSlice(0, 127)
 
 	for _, c := range p {
 		switch string(c) {
@@ -81,7 +75,7 @@ func calcRow(p string) int {
 }
 
 func calcCol(p string) int {
-	rs := buildIntSlice(0, 7)
+	rs := aoc.InitIntSlice(0, 7)
 
 	for _, c := range p {
 		switch string(c) {
@@ -93,14 +87,4 @@ func calcCol(p string) int {
 	}
 
 	return rs[0]
-}
-
-func buildIntSlice(min, max int) []int {
-	ints := []int{}
-
-	for i := min; i <= max; i++ {
-		ints = append(ints, i)
-	}
-
-	return ints
 }
