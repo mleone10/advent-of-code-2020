@@ -47,3 +47,14 @@ Other than that, there were only three other observations.  First, since Go does
 Second, an error in my input loop delayed my first star by a few minutes.  I *think* the `bufio.Scanner.Scan()` method was returning `false` after reading the last `\n`, which meant the last line never triggered the creation of the final passport.
 
 Finally, I validated hair color by trying to convert the given hex value into an integer.  This can be done with `strconv.ParseUint`, which apparently will work for any base from 2 to 36.  If conversion fails, `err != nil`.  I've also seen solutions that used regex matches for this (and all) validation, but I like to think this is more "correct".
+
+## 12/5
+This was a nice, easy puzzle after yesterday's slog.  While reading the puzzle, I immediately recognized that the boarding pass sequence was describing a binary search.  However, it's kind of coming at it from the opposite direction as a usual binary search - rather than ask for an algorithm to determine whether to use the top or bottom half of an array, today's problem *gives* us those movements.  I have a hunch that Go's built in `sort.Search()` method can be used to simplify my approach, so I might give that a shot at some point.
+
+Instead, I sort of brute forced it by initializing a slice of `N` integers and looping through the given instructions.  Depending on the instruction, I used slice expressions to chop off the top or bottom half of the array.  The puzzle guaranteed that we would have exactly enough instructions, so I knew that after this chopping loop I would have a single element left - the row/column ID.
+
+For part two, I got to use `sort.Ints()`!  First I created a slice of seat IDs, then sorted it.  Looping through to find the missing number just meant finding the first `id` that was not `previousID + 1`.
+
+One recurring lesson that these problems teach is the decomposition of a large problem into smaller, easier problems.  Today's is a great example of that.  For part one, I have to find the largest seat ID, so I made a `calcMaxSeatID()` function.  How do I get the max seat ID?  I need to calculate all of the individual seat IDs and find the max.  How do I calculate an individual seat ID?  Easy, `row * 8 + col`.  How do I find `row` and `col`?  Functions for `calcRow()` and `calcCol()`.  Here we finally get to the meat of the puzzle - given a string, how do I binary search through a slice of integers?  That's the real challenge, and everything before that is just getting there.
+
+This decomposition has the added benefit of making part two easier, usually.  Finding my seat ID first required that I have a list of *all* seat IDs, which I already had a function for!
