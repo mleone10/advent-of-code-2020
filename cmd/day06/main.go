@@ -40,16 +40,16 @@ func sumGroupCounts(gs []group, countFunc func(g group) int) int {
 }
 
 func countQuestions(g group) int {
-	rs := calcGroupResponses(g)
+	rs := aggGroupResponses(g)
 	return len(rs)
 }
 
 func countAllYes(g group) int {
-	rs := calcGroupResponses(g)
+	rs := aggGroupResponses(g)
 
 	sum := 0
-	for _, k := range keys(rs) {
-		if rs[k] == len(g) {
+	for _, c := range rs {
+		if c == len(g) {
 			sum++
 		}
 	}
@@ -57,7 +57,7 @@ func countAllYes(g group) int {
 	return sum
 }
 
-func calcGroupResponses(g group) map[string]int {
+func aggGroupResponses(g group) map[string]int {
 	rs := map[string]int{}
 
 	for _, p := range g {
@@ -67,14 +67,4 @@ func calcGroupResponses(g group) map[string]int {
 	}
 
 	return rs
-}
-
-func keys(m map[string]int) []string {
-	ks := []string{}
-
-	for k := range m {
-		ks = append(ks, k)
-	}
-
-	return ks
 }

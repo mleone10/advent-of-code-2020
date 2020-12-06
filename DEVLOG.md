@@ -58,3 +58,12 @@ For part two, I got to use `sort.Ints()`!  First I created a slice of seat IDs, 
 One recurring lesson that these problems teach is the decomposition of a large problem into smaller, easier problems.  Today's is a great example of that.  For part one, I have to find the largest seat ID, so I made a `calcMaxSeatID()` function.  How do I get the max seat ID?  I need to calculate all of the individual seat IDs and find the max.  How do I calculate an individual seat ID?  Easy, `row * 8 + col`.  How do I find `row` and `col`?  Functions for `calcRow()` and `calcCol()`.  Here we finally get to the meat of the puzzle - given a string, how do I binary search through a slice of integers?  That's the real challenge, and everything before that is just getting there.
 
 This decomposition has the added benefit of making part two easier, usually.  Finding my seat ID first required that I have a list of *all* seat IDs, which I already had a function for!
+
+## 12/6
+Today's puzzle was surprisingly straightforward.  Again we encounter the idea of splitting groups by a double `\n` character.  I think I'll try to find a more idiomatic way to do that than just detecting empty lines.  The `bufio` package has the concept of a `SplitFunc`, which I might be able to use to scan entire groups in at a time.  Then I can split those multi-line strings by `\n` to process the given group.  Plus, that custom `SplitFunc` can be extracted and reused.
+
+The solution for today's puzzle was really just about the clever usage of `map`s.  In my initial part one solution, I stored "questions" in a `map[string]bool`, which is effectively a set.  Part two required that I change the pseudo-set to also store a count of each "question", so I ended up modifying the part one solution to match.
+
+My solution for part two was delayed by not fully considering my algorithm before writing it.  The idea that I would have to reuse my part one solution, but with a count, was fairly immediate.  Subsequently *using* that count wasn't entirely clear, so my first attempt at part two involved something like `if len(rs) == len(g)`.  Completely off the mark, but I was in guess-and-check mode.  If I would have taken the time to think it through, I might have finished a minute before I did.
+
+In any case, part two's solution started with constructing the `map[string]int` of responses within a group.  With that, I just had to count the number of "questions" whose count matched the number of people in the group.
