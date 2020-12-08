@@ -88,7 +88,7 @@ func (p *program) permutateToHalt() {
 
 func (p *program) reset() {
 	r := make([]instruction, len(p.init))
-	copy(p.instructions, p.init)
+	copy(r, p.init)
 	p.instructions = r
 	p.acc = 0
 	p.pc = 0
