@@ -67,6 +67,15 @@ func IntSliceMin(ints []int) int {
 	return min
 }
 
+// IntSliceSum returns the sum of all integers in a given []int.
+func IntSliceSum(ints []int) int {
+	var sum int
+	for _, i := range ints {
+		sum += i
+	}
+	return sum
+}
+
 // InitIntSlice returns a new []int with all integers between min and max, inclusive.
 func InitIntSlice(min, max int) []int {
 	ints := []int{}
