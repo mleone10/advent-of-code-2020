@@ -49,21 +49,21 @@ func main() {
 	}
 
 	temps := make(seats)
-	temps.reset(ss)
 
+	temps.reset(ss)
+	log.Printf("Number of occupied seats after reaching stable state (immediate neighbors): %d", temps.runToStable(temps.adjNeighbors, 4))
+
+	temps.reset(ss)
+	log.Printf("Number of occupied seats after reaching stable state (visible neighbors): %d", temps.runToStable(temps.visNeighbors, 5))
+}
+
+func (ss seats) runToStable(neighborCounter neighborCounter, numToEmpty int) int {
 	var stable bool
 	for !stable {
-		stable = temps.step(temps.adjNeighbors, 4)
+		stable = ss.step(neighborCounter, numToEmpty)
 	}
 
-	log.Printf("Number of occupied seats after reaching stable state (immediate neighbors): %d", temps.numOccupied())
-
-	temps.reset(ss)
-	stable = false
-	for !stable {
-		stable = temps.step(temps.visNeighbors, 5)
-	}
-	log.Printf("Number of occupied seats after reaching stable state (visible neighbors): %d", temps.numOccupied())
+	return ss.numOccupied()
 }
 
 func (ss seats) reset(os seats) {
