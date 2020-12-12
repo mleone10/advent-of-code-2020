@@ -10,18 +10,32 @@ type Coordinate struct {
 }
 
 // Add adds Coordinate s to the given Coordinate
-func (r Coordinate) Add(s Coordinate) Coordinate {
+func (c Coordinate) Add(s Coordinate) Coordinate {
 	return Coordinate{
-		X: r.X + s.X,
-		Y: r.Y + s.Y,
+		X: c.X + s.X,
+		Y: c.Y + s.Y,
 	}
 }
 
 // Subtract substracts Coordinate s from the given Coordinate.
-func (r Coordinate) Subtract(s Coordinate) Coordinate {
+func (c Coordinate) Subtract(s Coordinate) Coordinate {
 	return Coordinate{
-		X: r.X - s.X,
-		Y: r.Y - s.Y,
+		X: c.X - s.X,
+		Y: c.Y - s.Y,
+	}
+}
+
+// Neighbors returns a list of the eight coordinates directly adjacent to a given coordinate.
+func (c Coordinate) Neighbors() []Coordinate {
+	return []Coordinate{
+		Coordinate{X: c.X, Y: c.Y - 1},     // North
+		Coordinate{X: c.X + 1, Y: c.Y - 1}, // Northeast
+		Coordinate{X: c.X + 1, Y: c.Y},     // East
+		Coordinate{X: c.X + 1, Y: c.Y + 1}, // Southeast
+		Coordinate{X: c.X, Y: c.Y + 1},     // South
+		Coordinate{X: c.X - 1, Y: c.Y + 1}, // Southwest
+		Coordinate{X: c.X - 1, Y: c.Y},     // West
+		Coordinate{X: c.X - 1, Y: c.Y - 1}, // Northwest
 	}
 }
 
@@ -29,6 +43,19 @@ func (r Coordinate) Subtract(s Coordinate) Coordinate {
 type Grid struct {
 	Points                 map[Coordinate]fmt.Stringer
 	minX, minY, maxX, maxY int
+}
+
+// Set stores a value at a given coordinate.
+func (g *Grid) Set(c Coordinate, v fmt.Stringer) {
+	if g.Points == nil {
+		g.Points = make(map[Coordinate]fmt.Stringer)
+	}
+
+	g.Points[c] = v
+	g.minX = Min(g.minX, c.X)
+	g.minY = Min(g.minY, c.Y)
+	g.maxX = Max(g.maxX, c.X)
+	g.maxY = Max(g.maxY, c.Y)
 }
 
 // Print displays the entire grid to STDOUT using the grid's designated MapperFunc
