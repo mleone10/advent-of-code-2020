@@ -5,6 +5,8 @@ import (
 	"log"
 	"os"
 	"strconv"
+
+	aoc "github.com/mleone10/advent-of-code-2020"
 )
 
 type action string
@@ -55,8 +57,14 @@ type ship struct {
 	loc  coordinate
 }
 
+type wayship struct {
+	s, wp ship
+}
+
 func main() {
 	var s ship
+	var ws wayship
+	ws.wp.loc.x, ws.wp.loc.y = 10, -1
 	scanner := bufio.NewScanner(os.Stdin)
 
 	for scanner.Scan() {
@@ -64,9 +72,11 @@ func main() {
 		a := action(i[0])
 		v, _ := strconv.Atoi(i[1:])
 		s.apply(a, value(v))
+		ws.apply(a, value(v))
 	}
 
-	log.Printf("Manhattan distance from origin: %d", s.loc.x+s.loc.y)
+	log.Printf("Normal ship manhattan distance from origin: %d", s.loc.x+s.loc.y)
+	log.Printf("Wayship manhattan distance from origin: %d", aoc.Abs(ws.s.loc.x)+aoc.Abs(ws.s.loc.y))
 }
 
 func (s *ship) apply(a action, v value) {
@@ -103,6 +113,43 @@ func (s *ship) move(dir coordinate, val value) {
 
 func (s *ship) turn(dir rotationDir, val value) {
 	s.head = headings[mod(int(s.head)+int(dir)*(int(val)/90), 4)]
+}
+
+func (ws *wayship) apply(a action, v value) {
+	switch a {
+	case actionNorth:
+		ws.wp.move(dirNorth, v)
+	case actionSouth:
+		ws.wp.move(dirSouth, v)
+	case actionEast:
+		ws.wp.move(dirEast, v)
+	case actionWest:
+		ws.wp.move(dirWest, v)
+	case actionLeft:
+		ws.turn(rotateLeft, v)
+	case actionRight:
+		ws.turn(rotateRight, v)
+	case actionForward:
+		ws.move(v)
+	}
+}
+
+func (ws *wayship) turn(dir rotationDir, val value) {
+	for i := 0; i < int(val)/90; i++ {
+		switch dir {
+		case rotateLeft:
+			ws.wp.loc.x, ws.wp.loc.y = ws.wp.loc.y, -1*ws.wp.loc.x
+		case rotateRight:
+			ws.wp.loc.x, ws.wp.loc.y = -1*ws.wp.loc.y, ws.wp.loc.x
+		}
+	}
+}
+
+func (ws *wayship) move(val value) {
+	for i := 0; i < int(val); i++ {
+		ws.s.loc.x = ws.s.loc.x + ws.wp.loc.x
+		ws.s.loc.y = ws.s.loc.y + ws.wp.loc.y
+	}
 }
 
 func mod(a, b int) int {
