@@ -2,8 +2,6 @@ package main
 
 import "log"
 
-const target = 2020
-
 type game struct {
 	init, hist []int
 }
