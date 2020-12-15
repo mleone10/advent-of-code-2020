@@ -2,24 +2,23 @@ package main
 
 import "log"
 
+const (
+	targetLow  = 2020
+	targetHigh = 30000000
+)
+
+type history map[int]int
 type game struct {
-	init, hist []int
+	init      []int
+	hist      history
+	turn, say int
 }
 
 func main() {
 	g := initGame(0, 1, 4, 13, 15, 12, 16)
 
-	for len(g.hist) < 2020 {
-		g.step()
-	}
-	log.Printf("Last number spoken on turn 2020 %d", g.last())
-
-	g.reset()
-
-	for len(g.hist) < 30000000 {
-		g.step()
-	}
-	log.Printf("Last number spoken on turn 30000000: %d", g.last())
+	log.Printf("Last number spoken on turn %d: %d", targetLow, g.saidOnTurnN(targetLow))
+	log.Printf("Last number spoken on turn %d: %d", targetHigh, g.saidOnTurnN(targetHigh))
 }
 
 func initGame(ns ...int) *game {
@@ -32,35 +31,33 @@ func initGame(ns ...int) *game {
 	return &g
 }
 
+func (g *game) saidOnTurnN(n int) int {
+	g.reset()
+	for g.turn < n {
+		g.step()
+	}
+	return g.say
+}
+
 func (g *game) step() {
-	p := g.last()
-	ts := g.turnIndexes(p)
 	say := 0
-	if len(ts) != 1 {
-		say = ts[len(ts)-1] - ts[len(ts)-2]
+	if t, ok := g.hist[g.say]; ok {
+		say = g.turn - t
 	}
 	g.load(say)
 }
 
-func (g *game) turnIndexes(n int) []int {
-	ts := []int{}
-	for i, m := range g.hist {
-		if m == n {
-			ts = append(ts, i)
-		}
-	}
-	return ts
-}
-
 func (g *game) reset() {
-	g.hist = make([]int, len(g.init))
-	copy(g.hist, g.init)
+	g.hist = history{}
+	g.turn = 1
+	g.say = g.init[0]
+	for _, n := range g.init[1:] {
+		g.load(n)
+	}
 }
 
 func (g *game) load(n int) {
-	g.hist = append(g.hist, n)
-}
-
-func (g *game) last() int {
-	return g.hist[len(g.hist)-1]
+	g.hist[g.say] = g.turn
+	g.say = n
+	g.turn++
 }
